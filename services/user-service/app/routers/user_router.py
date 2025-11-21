@@ -12,7 +12,7 @@ router = APIRouter()
 def api_get_user(user_id: int, db: Session = Depends(get_db)):
     try:
         user = get_user(db, user_id)
-        return ({"user": user, "detail": "User fetched successfully"})
+        return user 
     except UserNotFoundError:
         raise HTTPException(status_code=404, detail='User Not Found')
 
@@ -27,10 +27,10 @@ def api_create_user(user_data: UserCreate, db: Session = Depends(get_db)):
             password = user_data.password,
             email = user_data.email
         )
-        return ({"user": user, "detail": "User created successfully"})
+        return user
     
     except UserAlreadyExistsError:
-        raise HTTPException(status_code = 403, detail = 'User already exists')
+        raise HTTPException(status_code = 400, detail = 'User already exists')
     
     except Exception as e:
         # Fallback for any unexpected error
@@ -46,11 +46,11 @@ def api_update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(g
     try:
         update_fields = user_data.model_dump(exclude_unset=True)
         user = update_user(db, user_id, **update_fields)
-        return ({"user": user, "detail": "User updated successfully"})
+        return user
     except UserNotFoundError:
         raise HTTPException(status_code=404, detail='User Not Found')
     except UserAlreadyExistsError as e:
-        raise HTTPException(status_code=403, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail='Internal Server Error')
 
@@ -60,7 +60,7 @@ def api_update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(g
 def api_delete_user(user_id: int, db: Session = Depends(get_db)):
     try:
         user = delete_user(db, user_id)
-        return ({"detail": "User deleted successfully"})
+        return user
     except UserNotFoundError:
         raise HTTPException(status_code=404, detail='User Not Found')
     except Exception as e:
