@@ -83,14 +83,6 @@ ecommerce-platform/
 └── docs/                     # Documentation
 ```
 
-## Next Steps
-
-1. Configure database connections in each service's `.env`
-2. Create database models in `app/models/`
-3. Define API endpoints in `app/routers/`
-4. Implement business logic in `app/services/`
-5. Build React components in `frontend/src/components/`
-
 ## Documentation
 
 See `docs/` folder for detailed documentation on:
