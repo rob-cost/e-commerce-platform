@@ -28,7 +28,7 @@ ALLOWED_TRANSITIONS = {
 }
 
 
-def create_payment(db: Session, payment_in: PaymentCreate) -> Payment:
+def create_payment(db: Session, payment_in: PaymentCreate):
     """
     Create a new payment. Status defaults to pending in the model.
     Do not allow client to set status/created_at/updated_at/id.
@@ -48,6 +48,8 @@ def create_payment(db: Session, payment_in: PaymentCreate) -> Payment:
         db.add(payment)
         db.commit()
         db.refresh(payment)
+
+        return payment
     except IntegrityError as e:
         db.rollback()
         # customize if you have unique constraints or fk constraints
@@ -55,8 +57,6 @@ def create_payment(db: Session, payment_in: PaymentCreate) -> Payment:
     except SQLAlchemyError as e:
         db.rollback()
         raise PaymentCreationError("Database error while creating payment") from e
-
-    return payment
 
 
 def get_payment(db: Session, payment_id: int) -> Payment:
@@ -109,5 +109,3 @@ def mark_payment_as_cancelled(db: Session, payment_id: int):
     """
     # Example: map cancel to failed
     return update_payment_status(db, payment_id, PaymentStatusUpdate(status=PaymentStatus.failed))
-
-
