@@ -6,6 +6,7 @@ from app.schemas.product import ProductCreate, ProductUpdate
 class ProductNotFoundError(Exception):
     pass
 
+
 def get_product(db:Session, product_id: int):
     product = db.query(Product).filter(Product.id == product_id).first()
 
@@ -30,6 +31,7 @@ def create_product(db: Session, product: ProductCreate):
     db.commit()
     db.refresh(db_product)
     return db_product
+
 
 def update_product(db:Session, product_id: int, product: ProductUpdate):
     db_product = get_product(db, product_id)
