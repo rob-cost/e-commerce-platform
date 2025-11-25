@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.routers import payment_router
 
 app = FastAPI(title="payment-service")
 
@@ -12,10 +13,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def read_root():
-    return {"service": "payment-service", "status": "running"}
-
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
+app.include_router(payment_router.router)
