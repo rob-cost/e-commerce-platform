@@ -37,6 +37,14 @@ def get_user(db: Session, user_id: int):
     
     return user
 
+def get_users(db: Session, skip: int = 0, limit: int = 100):
+    users = db.query(User).offset(skip).limit(limit).all()
+
+    if not users:
+        raise UserNotFoundError(f'Users not found')
+    
+    return users
+
 
 def get_user_by_email(db: Session, email: str) -> User | None:
     return db.query(User).filter(User.email == email).first()

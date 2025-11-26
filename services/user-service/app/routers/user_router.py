@@ -1,7 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from typing import List
+
 from app.schemas.user import UserRead, UserCreate, UserUpdate
-from app.services.user_service import UserNotFoundError, UserAlreadyExistsError, create_user, get_user, update_user, delete_user
+from app.services.user_service import ( 
+    UserNotFoundError,
+    UserAlreadyExistsError, 
+    create_user, 
+    get_user, 
+    get_users,
+    update_user, 
+    delete_user )
 from app.database import get_db
 
 router = APIRouter()
@@ -12,6 +21,16 @@ router = APIRouter()
 def api_get_user(user_id: int, db: Session = Depends(get_db)):
     try:
         user = get_user(db, user_id)
+        return user 
+    except UserNotFoundError:
+        raise HTTPException(status_code=404, detail='User Not Found')
+    
+
+# Get all users 
+@router.get('/users', response_model=List[UserRead])
+def api_get_user(db: Session = Depends(get_db)):
+    try:
+        user = get_users(db)
         return user 
     except UserNotFoundError:
         raise HTTPException(status_code=404, detail='User Not Found')
