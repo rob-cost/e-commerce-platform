@@ -1,7 +1,8 @@
 from fastapi import FastAPI
+from app.routers import order_router
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="order-service")
+app = FastAPI(title="Product Service")
 
 # CORS middleware
 app.add_middleware(
@@ -12,10 +13,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def read_root():
-    return {"service": "order-service", "status": "running"}
-
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
+app.include_router(order_router.router)

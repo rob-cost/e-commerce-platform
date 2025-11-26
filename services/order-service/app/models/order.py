@@ -2,6 +2,7 @@
 
 from sqlalchemy import Column, Integer, DECIMAL, Enum, DateTime
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 from app.database import Base
 import enum
 
@@ -11,7 +12,7 @@ class OrderStatus(str, enum.Enum):
     cancelled = "cancelled"
 
 class Order(Base):
-    __tablename__ = "order"
+    __tablename__ = "orders"
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, nullable=False) # refer to user id
@@ -19,3 +20,6 @@ class Order(Base):
     status = Column(Enum(OrderStatus), default=OrderStatus.pending, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    # Order
+    items = relationship("OrderItem", backref="order", cascade="all, delete-orphan")
