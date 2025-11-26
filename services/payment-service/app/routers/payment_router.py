@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from typing import List
 from sqlalchemy.orm import Session
 
-from app.database import get_db  # your dependency
+from app.database import get_db  # db dependency
 from app.schemas.payment import PaymentCreate, PaymentRead, PaymentStatusUpdate, PaymentStatus
 from app.services.payment_service import (
     create_payment,
