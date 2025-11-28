@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.routers import inventory_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="inventory-service")
@@ -12,10 +13,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def read_root():
-    return {"service": "inventory-service", "status": "running"}
-
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
+app.include_router(inventory_router.router)
